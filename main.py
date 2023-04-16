@@ -72,20 +72,20 @@ def compare_algorithms():
         original = [int(random.uniform(1, M)) for i in range(K)]
         res0 = approXsort(M=M, K=len(original), arr=original, algorithm=algorithm0)
         res1 = approXsort(M=M, K=len(original), arr=original, algorithm=algorithm1)
-        count_sorted_algo0 = 0
-        count_sorted_algo1 = 0
-        count_original = 0
+        blocking_algo0 = 0
+        blocking_algo1 = 0
+        blocking_original = 0
         for i in range(len(res0)):
-            for j in range(i + 1, len(res0)):
-                if res0[i] > res0[j]:
-                    count_sorted_algo0 += 1
-                if original[i] > original[j]:
-                    count_original += 1
-                if res1[i] > res1[j]:
-                    count_sorted_algo1 += 1
-        num_blocking_all[0].append(count_original / K)
-        num_blocking_all[1].append(count_sorted_algo0 / K)
-        num_blocking_all[2].append(count_sorted_algo1 / K)
+            for j in range(i):
+                if res0[j] > res0[i]:
+                    blocking_algo0 += 1
+                if original[j] > original[i]:
+                    blocking_original += 1
+                if res1[j] > res1[i]:
+                    blocking_algo1 += 1
+        num_blocking_all[0].append(blocking_original / K )
+        num_blocking_all[1].append(blocking_algo0 /K )
+        num_blocking_all[2].append(blocking_algo1 /K )
     plot(K_s,num_blocking_all)
 
 
