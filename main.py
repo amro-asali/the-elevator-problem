@@ -1,11 +1,12 @@
 import math
 import random
+
 from matplotlib import pyplot as plt
 
 
 def nCr(n, r):
     f = math.factorial
-    return f(n)/(f(n-r)*f(r))
+    return f(n) / (f(n - r) * f(r))
 
 
 def algorithm1(M, K, i, j_list):
@@ -15,8 +16,8 @@ def algorithm1(M, K, i, j_list):
     max_j = -1
     for j in range(N + 1):
         if not j_list[j]:  # j is unoccupied
-            p1 = (i / M) ** (j - 1) # probability for (j-1) tenants to live below or at i
-            p2 = (((M - i + 1) / M) ** (K - j)) * nCr(K - 1, j - 1) # probability for (k-j) tenants to live
+            p1 = (i / M) ** (j - 1)  # probability for (j-1) tenants to live below or at i
+            p2 = (((M - i + 1) / M) ** (K - j)) * nCr(K - 1, j - 1)  # probability for (k-j) tenants to live
             # above or at i
             p = p1 * p2
             if p > max_p:
@@ -30,15 +31,13 @@ def algorithm0(M, K, i, j_list):
         if not j_list[i]:
             return i
         else:
-            for j in range(1, max(i,K-i)):
+            for j in range(1, max(i, K - i)):
                 if i - j >= 0 and not j_list[i - j]:
                     return j
-                elif i + j < len(j_list) and not j_list[i+j]:
+                elif i + j < len(j_list) and not j_list[i + j]:
                     return j
 
     return algorithm1(M, K, i, j_list)
-
-
 
 
 def approXsort(M, K, arr, algorithm):
@@ -54,22 +53,19 @@ def approXsort(M, K, arr, algorithm):
     return res
 
 
-def plot():
+def plot(K_s,Y_s ):
     plt.title('average number of tenants blocking the door comparison as a function of K')
     plt.xlabel('K')
     plt.ylabel('avg #tenants blocking the door')
-    plt.scatter(K_s, Y_srtd_algo0, label='approx sorted algo0' , c='RED')
-    plt.scatter(K_s, Y_srtd_algo1, label='approx sorted algo1' , c='BLACK')
-    plt.scatter(K_s, Y_org, label='original')
+    plt.scatter(K_s, Y_s[1], label='approx sorted algo0', c='RED')
+    plt.scatter(K_s, Y_s[2], label='approx sorted algo1', c='BLACK')
+    plt.scatter(K_s, Y_s[0], label='original')
     plt.legend()
     plt.show()
 
 
-if __name__ == '__main__':
-    Y_srtd_algo2 = []
-    Y_srtd_algo1 = []
-    Y_srtd_algo0 = []
-    Y_org = []
+def compare_algorithms():
+    num_blocking_all = [[], [], []]  # [ org , algo0 , algo1 ]
     M = 100
     K_s = sorted(set([int(random.uniform(2, 100)) for i in range(50)]))
     for K in K_s:
@@ -87,8 +83,11 @@ if __name__ == '__main__':
                     count_original += 1
                 if res1[i] > res1[j]:
                     count_sorted_algo1 += 1
-        Y_org.append(count_original / K)
-        Y_srtd_algo0.append(count_sorted_algo0 / K)
-        Y_srtd_algo1.append(count_sorted_algo1 / K)
+        num_blocking_all[0].append(count_original / K)
+        num_blocking_all[1].append(count_sorted_algo0 / K)
+        num_blocking_all[2].append(count_sorted_algo1 / K)
+    plot(K_s,num_blocking_all)
 
-    plot()
+
+if __name__ == '__main__':
+    compare_algorithms()
