@@ -1,15 +1,27 @@
 import math
 import random
-
 from matplotlib import pyplot as plt
 
 
 def nCr(n, r):
+    """Compute the binomial coefficient "n choose r" using the factorial function."""
+
     f = math.factorial
     return f(n) / (f(n - r) * f(r))
 
 
 def algorithm1(M, K, i, j_list):
+    """Implementation of algorithm 1 for approximate sorting.
+
+        Args:
+            M (int): The maximum value of the elements in the array.
+            K (int): The length of the array.
+            i (int): The current element being sorted.
+            j_list (List[int]): A binary list representing the elements of the array that have already been sorted.
+
+        Returns:
+            int: The index at which the current element should be inserted in the sorted array.
+    """
     # P(Q=j)=(iM)j-1(M-i+1M)K-j(K-1 choose j-1)
     N = K
     max_p = 0
@@ -27,6 +39,17 @@ def algorithm1(M, K, i, j_list):
 
 
 def algorithm0(M, K, i, j_list):
+    """Implementation of algorithm 0 for approximate sorting.
+
+        Args:
+            M (int): The maximum value of the elements in the array.
+            K (int): The length of the array.
+            i (int): The current element being sorted.
+            j_list (List[int]): A binary list representing the elements of the array that have already been sorted.
+
+        Returns:
+            int: The index at which the current element should be inserted in the sorted array.
+    """
     if i < K:
         if not j_list[i]:
             return i
@@ -41,6 +64,17 @@ def algorithm0(M, K, i, j_list):
 
 
 def approXsort(M, K, arr, algorithm):
+    """Sort an array approximately using the given algorithm.
+
+        Args:
+            M (int): The maximum value of the elements in the array.
+            K (int): The length of the array.
+            arr (List[int]): The array to be sorted.
+            algorithm (Callable): The algorithm to be used for sorting.
+
+        Returns:
+            List[int]: The sorted array.
+    """
     N = K
     j_list = [1] + [0] * N
     res = [-1] * N
@@ -54,6 +88,16 @@ def approXsort(M, K, arr, algorithm):
 
 
 def plot(K_s, Y_s):
+    """Plot the average number of tenants blocking the door comparison as a function of K.
+
+        Args:
+            K_s (list): A list of integers representing the values of K for which the experiment was run.
+            Y_s (list): A list of three lists, each containing the average number of tenants blocking the door for the
+                        original, approximate sorted algorithm 0, and approximate sorted algorithm 1, respectively.
+
+        Returns:
+            None.
+    """
     plt.title('average number of tenants blocking the door comparison as a function of K')
     plt.xlabel('K')
     plt.ylabel('avg #tenants blocking the door')
@@ -65,6 +109,15 @@ def plot(K_s, Y_s):
 
 
 def compare_algorithms():
+    """Compare the original algorithm to two approximate sorted algorithms by running experiments for different values
+        of K and plotting the results.
+
+        Args:
+            None.
+
+        Returns:
+            None.
+    """
     num_blocking_all = [[], [], []]  # [ org , algo0 , algo1 ]
     M = 100
     K_s = sorted(set([int(random.uniform(2, 100)) for _ in range(50)]))
